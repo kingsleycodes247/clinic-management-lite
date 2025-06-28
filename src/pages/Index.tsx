@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, UserCheck, Calendar, FileText, Activity, Building2, DollarSign, Pill, Droplets, Syringe, Moon, Sun, LogOut } from "lucide-react";
+import { Users, UserCheck, Calendar, FileText, Activity, Building2, DollarSign, Pill, Droplets, Syringe, Moon, Sun, LogOut, Shirt, BedDouble } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import LoginForm from "@/components/auth/LoginForm";
 import PatientManagement from "@/components/hospital/PatientManagement";
@@ -17,6 +17,8 @@ import PharmacySystem from "@/components/hospital/PharmacySystem";
 import BloodBankSystem from "@/components/hospital/BloodBankSystem";
 import PhlebotomySystem from "@/components/hospital/PhlebotomySystem";
 import RoleBasedDashboard from "@/components/hospital/RoleBasedDashboard";
+import LinenLaundrySystem from "@/components/hospital/LinenLaundrySystem";
+import WardManagement from "@/components/hospital/WardManagement";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -52,7 +54,9 @@ const Index = () => {
       { value: "billing", label: "Billing", icon: DollarSign, roles: ["admin", "billing", "receptionist"] },
       { value: "pharmacy", label: "Pharmacy", icon: Pill, roles: ["admin", "pharmacist", "doctor"] },
       { value: "bloodbank", label: "Blood Bank", icon: Droplets, roles: ["admin", "lab_technician", "doctor"] },
-      { value: "phlebotomy", label: "Phlebotomy", icon: Syringe, roles: ["admin", "lab_technician", "nurse"] }
+      { value: "phlebotomy", label: "Phlebotomy", icon: Syringe, roles: ["admin", "lab_technician", "nurse"] },
+      { value: "linen", label: "Linen & Laundry", icon: Shirt, roles: ["admin", "nurse"] },
+      { value: "wards", label: "Ward Management", icon: BedDouble, roles: ["admin", "nurse", "doctor"] }
     ];
 
     return allTabs.filter(tab => tab.roles.includes(userRole));
@@ -70,14 +74,14 @@ const Index = () => {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
               <div className="bg-blue-600 p-2 rounded-lg">
-                <Activity className="h-8 w-8 text-white" />
+                <Activity className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MediCare Technology</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Management System</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">MediCare Technology</h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Management System</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="outline"
                 size="sm"
@@ -90,7 +94,7 @@ const Index = () => {
                   <Sun className="h-4 w-4" />
                 )}
               </Button>
-              <div className="text-right">
+              <div className="hidden sm:block text-right">
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {userInfo.name || "User"}
                 </p>
@@ -98,8 +102,8 @@ const Index = () => {
                   {userRole.replace('_', ' ')}
                 </p>
               </div>
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium text-sm">
                   {(userInfo.name || "U").charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -107,10 +111,10 @@ const Index = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Logout</span>
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -118,17 +122,23 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full bg-white dark:bg-gray-800 shadow-sm transition-colors duration-300" 
-                   style={{ gridTemplateColumns: `repeat(${getRoleBasedTabs().length}, 1fr)` }}>
-            {getRoleBasedTabs().map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value} className="flex items-center space-x-2">
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+      <main className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <div className="overflow-x-auto">
+            <TabsList className="inline-flex w-max min-w-full bg-white dark:bg-gray-800 shadow-sm transition-colors duration-300 p-1" 
+                     style={{ gridTemplateColumns: `repeat(${getRoleBasedTabs().length}, minmax(0, 1fr))` }}>
+              {getRoleBasedTabs().map((tab) => (
+                <TabsTrigger 
+                  key={tab.value} 
+                  value={tab.value} 
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 whitespace-nowrap"
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span className="text-xs sm:text-sm">{tab.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
           <TabsContent value="dashboard">
             {userRole === "admin" ? <Dashboard /> : <RoleBasedDashboard userRole={userRole} />}
@@ -168,6 +178,14 @@ const Index = () => {
 
           <TabsContent value="phlebotomy">
             <PhlebotomySystem />
+          </TabsContent>
+
+          <TabsContent value="linen">
+            <LinenLaundrySystem />
+          </TabsContent>
+
+          <TabsContent value="wards">
+            <WardManagement />
           </TabsContent>
         </Tabs>
       </main>
