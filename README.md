@@ -1,8 +1,7 @@
 # Welcome to my Clinic Management Light Project
 
 ## Project info
-
-**URL**: https://lovable.dev/projects/e5b3682a-86a4-4287-91bf-fbb7e8d49e86
+ Currently under development
 
 ## How can I edit this code?
 
